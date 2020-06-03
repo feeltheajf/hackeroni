@@ -44,9 +44,56 @@ func (s *ReportService) Get(ID string) (*Report, *Response, error) {
 	return rResp, resp, err
 }
 
+// ChangeState transitions specified Report to a new state
+//
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-change-state
+func (s *ReportService) ChangeState(ID, message, state string, originalID *string) (*Report, *Response, error) {
+	body := &StateChange{
+		Message:          message,
+		State:            state,
+		OriginalReportID: originalID,
+	}
+
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("reports/%s/state_changes", ID), body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rResp := new(Report)
+	resp, err := s.client.Do(req, rResp)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return rResp, resp, err
+}
+
+// CreateComment posts a new comment for specified Report
+//
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-create-comment
+func (s *ReportService) CreateComment(ID, message string, internal bool) (*Activity, *Response, error) {
+	body := &CreateComment{
+		Message:  message,
+		Internal: internal,
+	}
+
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("reports/%s/activities", ID), body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rResp := new(Activity)
+	resp, err := s.client.Do(req, rResp)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return rResp, resp, err
+}
+
 // ReportListFilter specifies optional parameters to the ReportService.List method.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#reports/query
+// HackerOne API docs: https://api.hackerone.com/reference/#reports/query
 type ReportListFilter struct {
 	Program                           []string  `url:"program,brackets"`
 	State                             []string  `url:"state,brackets,omitempty"`
@@ -80,9 +127,9 @@ type ReportListFilter struct {
 	LastActivityAtLessThan            time.Time `url:"last_activity_at__lt,omitempty"`
 }
 
-// List returns all Reports matching the specified criteria
+// List returns Reports matching the specified criteria
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#reports/query
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-get-all-reports
 func (s *ReportService) List(filterOpts ReportListFilter, listOpts *ListOptions) ([]Report, *Response, error) {
 	opts := struct {
 		Filter ReportListFilter `url:"filter,brackets"`
@@ -104,4 +151,24 @@ func (s *ReportService) List(filterOpts ReportListFilter, listOpts *ListOptions)
 	}
 
 	return *reports, resp, err
+}
+
+// ListAll returns all Reports matching the specified criteria
+//
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-get-all-reports
+func (s *ReportService) ListAll(filterOpts ReportListFilter) ([]Report, *Response, error) {
+	listOpts := &ListOptions{PageSize: defaultPageSize}
+	reports := []Report{}
+	for {
+		reportList, resp, err := s.List(filterOpts, listOpts)
+		if err != nil {
+			return nil, resp, err
+		}
+		reports = append(reports, reportList...)
+		if resp.Links.Next == "" {
+			break
+		}
+		listOpts.Page = resp.Links.NextPageNumber()
+	}
+	return reports, nil, nil
 }

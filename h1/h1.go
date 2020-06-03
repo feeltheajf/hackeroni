@@ -22,7 +22,10 @@ package h1
 
 // Imports
 import (
+	"bytes"
+
 	"github.com/google/go-querystring/query"
+	"github.com/google/jsonapi"
 
 	"encoding/json"
 	"fmt"
@@ -33,9 +36,10 @@ import (
 )
 
 const (
-	libraryVersion = "1"
-	defaultBaseURL = "https://api.hackerone.com/v1/"
-	userAgent      = "hackeroni/v" + libraryVersion
+	libraryVersion  = "1"
+	defaultBaseURL  = "https://api.hackerone.com/v1/"
+	userAgent       = "hackeroni/v" + libraryVersion
+	defaultPageSize = 100
 )
 
 // A Client manages communication with the H1 API.
@@ -110,18 +114,26 @@ func NewClient(httpClient *http.Client) *Client {
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr
-func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(method, urlStr string, data interface{}) (*http.Request, error) {
 	rel, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(method, c.BaseURL.ResolveReference(rel).String(), nil)
+	body := bytes.NewBuffer(nil)
+	if data != nil {
+		if err := jsonapi.MarshalPayload(body, data); err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest(method, c.BaseURL.ResolveReference(rel).String(), body)
 	if err != nil {
 		return nil, err
 	}
 
 	req.Header.Add("User-Agent", c.UserAgent)
+	req.Header.Add("Content-Type", "application/json")
 
 	return req, nil
 }

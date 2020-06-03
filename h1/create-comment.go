@@ -20,35 +20,11 @@
 
 package h1
 
-import (
-	"encoding/json"
-)
-
-// VulnerabilityType represents a type of vulnerability.
+// CreateComment represents a request body for creating new comment
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#vulnerablity-type
-type VulnerabilityType struct {
-	ID          *string    `json:"id"`
-	Type        *string    `json:"type"`
-	Name        *string    `json:"name"`
-	Description *string    `json:"description"`
-	CreatedAt   *Timestamp `json:"created_at"`
-}
-
-// Helper types for JSONUnmarshal
-type vulnerabilityType VulnerabilityType // Used to avoid recursion of JSONUnmarshal
-type vulnerabilityTypeUnmarshalHelper struct {
-	vulnerabilityType
-	Attributes *vulnerabilityType `json:"attributes"`
-}
-
-// UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
-func (v *VulnerabilityType) UnmarshalJSON(b []byte) error {
-	var helper vulnerabilityTypeUnmarshalHelper
-	helper.Attributes = &helper.vulnerabilityType
-	if err := json.Unmarshal(b, &helper); err != nil {
-		return err
-	}
-	*v = VulnerabilityType(helper.vulnerabilityType)
-	return nil
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-create-comment
+type CreateComment struct {
+	Type     string `jsonapi:"primary,activity-comment"`
+	Message  string `jsonapi:"attr,message"`
+	Internal bool   `jsonapi:"attr,internal"`
 }

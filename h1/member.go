@@ -26,7 +26,7 @@ import (
 
 // MemberPermission represent possible permissions sizes for a member
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#member
+// HackerOne API docs: https://api.hackerone.com/reference/#member
 const (
 	MemberPermissionRewardManagement  string = "reward_management"
 	MemberPermissionProgramManagement string = "program_management"
@@ -36,13 +36,14 @@ const (
 
 // Member represents a user in a program
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#member
+// HackerOne API docs: https://api.hackerone.com/reference/#member
 type Member struct {
 	ID          *string    `json:"id"`
 	Type        *string    `json:"type"`
 	Permissions []*string  `json:"permissions"`
 	CreatedAt   *Timestamp `json:"created_at"`
 	User        *User      `json:"user"`
+	Groups      []Group    `json:"groups,omitempty"`
 }
 
 // Helper types for JSONUnmarshal

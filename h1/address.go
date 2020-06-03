@@ -26,7 +26,7 @@ import (
 
 // AddressTShirtSize represent possible T-Shirt sizes for an address
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#address
+// HackerOne API docs: https://api.hackerone.com/reference/#address
 const (
 	AddressTShirtSizeSmall   string = "Small"
 	AddressTShirtSizeMedium  string = "Medium"
@@ -37,7 +37,7 @@ const (
 
 // Address represents an address for a user.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#address
+// HackerOne API docs: https://api.hackerone.com/reference/#address
 type Address struct {
 	ID          *string    `json:"id"`
 	Type        *string    `json:"type"`

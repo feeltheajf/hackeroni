@@ -24,35 +24,32 @@ import (
 	"encoding/json"
 )
 
-// Attachment represents an attachment (typically to a report or comment).
+// Weakness represents the type of weakness the hacker submitted to a program.
 //
-// HackerOne API docs: https://api.hackerone.com/reference/#attachment
-type Attachment struct {
+// HackerOne API docs: https://api.hackerone.com/reference/#weakness
+type Weakness struct {
 	ID          *string    `json:"id"`
 	Type        *string    `json:"type"`
-	FileName    *string    `json:"file_name"`
-	ContentType *string    `json:"content_type"`
-	FileSize    *int       `json:"file_size"`
-	ExpiringURL *string    `json:"expiring_url"`
+	Name        *string    `json:"name"`
+	Description *string    `json:"description"`
+	ExternalID  *string    `json:"external_id"`
 	CreatedAt   *Timestamp `json:"created_at"`
 }
 
 // Helper types for JSONUnmarshal
-type attachment Attachment // Used to avoid recursion of JSONUnmarshal
-type attachmentUnmarshalHelper struct {
-	*attachment
-	Attributes *attachment `json:"attributes"`
+type weakness Weakness // Used to avoid recursion of JSONUnmarshal
+type weaknessUnmarshalHelper struct {
+	weakness
+	Attributes *weakness `json:"attributes"`
 }
 
 // UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
-func (a *Attachment) UnmarshalJSON(b []byte) error {
-	result := attachment{}
-	var helper attachmentUnmarshalHelper
-	helper.attachment = &result
-	helper.Attributes = &result
+func (v *Weakness) UnmarshalJSON(b []byte) error {
+	var helper weaknessUnmarshalHelper
+	helper.Attributes = &helper.weakness
 	if err := json.Unmarshal(b, &helper); err != nil {
 		return err
 	}
-	*a = Attachment(result)
+	*v = Weakness(helper.weakness)
 	return nil
 }

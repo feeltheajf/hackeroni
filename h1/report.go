@@ -26,7 +26,7 @@ import (
 
 // ReportState represent possible states for a report
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#report
+// HackerOne API docs: https://api.hackerone.com/reference/#report
 const (
 	ReportStateNew           string = "new"
 	ReportStateTriaged       string = "triaged"
@@ -40,35 +40,41 @@ const (
 
 // Report represents a report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#report
+// HackerOne API docs: https://api.hackerone.com/reference/#report
 type Report struct {
-	ID                       *string             `json:"id"`
-	Type                     *string             `json:"type"`
-	Title                    *string             `json:"title"`
-	VulnerabilityInformation *string             `json:"vulnerability_information,omitempty"`
-	State                    *string             `json:"state"`
-	CreatedAt                *Timestamp          `json:"created_at"`
-	TriagedAt                *Timestamp          `json:"triaged_at,omitempty"`
-	ClosedAt                 *Timestamp          `json:"closed_at,omitempty"`
-	LastReporterActivityAt   *Timestamp          `json:"last_reporter_activity_at,omitempty"`
-	FirstProgramActivityAt   *Timestamp          `json:"first_program_activity_at,omitempty"`
-	LastProgramActivityAt    *Timestamp          `json:"last_program_activity_at,omitempty"`
-	LastActivityAt           *Timestamp          `json:"last_activity_at,omitempty"`
-	BountyAwardedAt          *Timestamp          `json:"bounty_awarded_at,omitempty"`
-	SwagAwardedAt            *Timestamp          `json:"swag_awarded_at,omitempty"`
-	DisclosedAt              *Timestamp          `json:"disclosed_at,omitempty"`
-	IssueTrackerReferenceID  *string             `json:"issue_tracker_reference_id,omitempty"`
-	IssueTrackerReferenceURL *string             `json:"issue_tracker_reference_url,omitempty"`
-	Program                  *Program            `json:"program"`
-	RawAssignee              json.RawMessage     `json:"assignee,omitempty"` // Used by Assignee()
-	Attachments              []Attachment        `json:"attachments,omitempty"`
-	Swag                     []Swag              `json:"swag,omitempty"`
-	VulnerabilityTypes       []VulnerabilityType `json:"vulnerability_types"`
-	Severity                 *Severity           `json:"severity,omitempty"`
-	Reporter                 *User               `json:"reporter,omitempty"`
-	Activities               []Activity          `json:"activities,omitempty"`
-	Bounties                 []Bounty            `json:"bounties,omitempty"`
-	Summaries                []ReportSummary     `json:"summaries,omitempty"`
+	ID                            *string         `json:"id"`
+	Type                          *string         `json:"type"`
+	Title                         *string         `json:"title"`
+	VulnerabilityInformation      *string         `json:"vulnerability_information,omitempty"`
+	State                         *string         `json:"state"`
+	CreatedAt                     *Timestamp      `json:"created_at"`
+	TriagedAt                     *Timestamp      `json:"triaged_at,omitempty"`
+	ClosedAt                      *Timestamp      `json:"closed_at,omitempty"`
+	LastReporterActivityAt        *Timestamp      `json:"last_reporter_activity_at,omitempty"`
+	FirstProgramActivityAt        *Timestamp      `json:"first_program_activity_at,omitempty"`
+	LastProgramActivityAt         *Timestamp      `json:"last_program_activity_at,omitempty"`
+	LastActivityAt                *Timestamp      `json:"last_activity_at,omitempty"`
+	LastPublicActivityAt          *Timestamp      `json:"last_public_activity_at,omitempty"`
+	BountyAwardedAt               *Timestamp      `json:"bounty_awarded_at,omitempty"`
+	SwagAwardedAt                 *Timestamp      `json:"swag_awarded_at,omitempty"`
+	DisclosedAt                   *Timestamp      `json:"disclosed_at,omitempty"`
+	ReporterAgreedOnGoingPublicAt *Timestamp      `json:"reporter_agreed_on_going_public_at,omitempty"`
+	IssueTrackerReferenceID       *string         `json:"issue_tracker_reference_id,omitempty"`
+	IssueTrackerReferenceURL      *string         `json:"issue_tracker_reference_url,omitempty"`
+	CVEIDs                        []string        `json:"cve_ids,omitempty"`
+	Source                        *string         `json:"source,omitempty"`
+	Program                       *Program        `json:"program"`
+	RawAssignee                   json.RawMessage `json:"assignee,omitempty"` // Used by Assignee()
+	Attachments                   []Attachment    `json:"attachments,omitempty"`
+	Swag                          []Swag          `json:"swag,omitempty"`
+	Weakness                      *Weakness       `json:"weakness,omitempty"`
+	Severity                      *Severity       `json:"severity,omitempty"`
+	Reporter                      *User           `json:"reporter,omitempty"`
+	// TriggeredPreSubmissionTrigger
+	Activities []Activity      `json:"activities,omitempty"`
+	Bounties   []Bounty        `json:"bounties,omitempty"`
+	Summaries  []ReportSummary `json:"summaries,omitempty"`
+	// CustomFieldValues
 }
 
 // Helper types for JSONUnmarshal
@@ -89,9 +95,9 @@ type reportUnmarshalHelper struct {
 		Swag struct {
 			Data []Swag `json:"data"`
 		} `json:"swag"`
-		VulnerabilityTypes struct {
-			Data []VulnerabilityType `json:"data"`
-		} `json:"vulnerability_types"`
+		Weakness struct {
+			Data *Weakness `json:"data"`
+		} `json:"weakness"`
 		Severity struct {
 			Data *Severity `json:"data"`
 		} `json:"severity"`
@@ -122,7 +128,7 @@ func (r *Report) UnmarshalJSON(b []byte) error {
 	r.RawAssignee = helper.Relationships.RawAssignee.Data
 	r.Attachments = helper.Relationships.Attachments.Data
 	r.Swag = helper.Relationships.Swag.Data
-	r.VulnerabilityTypes = helper.Relationships.VulnerabilityTypes.Data
+	r.Weakness = helper.Relationships.Weakness.Data
 	r.Severity = helper.Relationships.Severity.Data
 	r.Reporter = helper.Relationships.Reporter.Data
 	r.Activities = helper.Relationships.Activities.Data

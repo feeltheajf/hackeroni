@@ -26,7 +26,7 @@ import (
 
 // SeverityRating represent possible severity ratings
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#severity
+// HackerOne API docs: https://api.hackerone.com/reference/#severity
 const (
 	SeverityRatingNone              string = "none"
 	SeverityRatingLow               string = "low"
@@ -56,7 +56,7 @@ const (
 
 // Severity represents a severity object
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#severity
+// HackerOne API docs: https://api.hackerone.com/reference/#severity
 type Severity struct {
 	ID                 *string    `json:"id"`
 	Type               *string    `json:"type"`

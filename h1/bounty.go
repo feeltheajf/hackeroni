@@ -26,13 +26,16 @@ import (
 
 // Bounty represents a bounty awarded.
 //
-// HackerOne API docs:  https://api.hackerone.com/docs/v1#bounty
+// HackerOne API docs:  https://api.hackerone.com/reference/#bounty
 type Bounty struct {
-	ID          *string    `json:"id"`
-	Type        *string    `json:"type"`
-	Amount      *string    `json:"amount"`
-	BonusAmount *string    `json:"bonus_amount"`
-	CreatedAt   *Timestamp `json:"created_at"`
+	ID                 *string    `json:"id"`
+	Type               *string    `json:"type"`
+	Amount             *string    `json:"amount,omitempty"`
+	BonusAmount        *string    `json:"bonus_amount,omitempty"`
+	AwardedAmount      *string    `json:"awarded_amount,omitempty"`
+	AwardedBonusAmount *string    `json:"awarded_bonus_amount,omitempty"`
+	AwardedCurrency    *string    `json:"awarded_currency,omitempty"`
+	CreatedAt          *Timestamp `json:"created_at"`
 }
 
 // Helper types for JSONUnmarshal

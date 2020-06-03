@@ -26,15 +26,19 @@ import (
 
 // Program represents a overall program.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#program
+// HackerOne API docs: https://api.hackerone.com/reference/#program
 type Program struct {
 	ID        *string    `json:"id"`
 	Type      *string    `json:"type"`
 	Handle    *string    `json:"handle"`
+	Policy    *string    `json:"policy"`
 	CreatedAt *Timestamp `json:"created_at"`
 	UpdatedAt *Timestamp `json:"updated_at"`
 	Groups    []*Group   `json:"groups,omitempty"`
 	Members   []*Member  `json:"member,omitempty"`
+	// CustomFieldAttributes
+	// PolicyAttachments
+	// Transactions
 }
 
 // Helper types for JSONUnmarshal

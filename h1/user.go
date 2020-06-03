@@ -34,25 +34,35 @@ type UserProfilePicture struct {
 
 // User represents an individual user.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#user
+// HackerOne API docs: https://api.hackerone.com/reference/#user
 type User struct {
-	ID             *string            `json:"id"`
-	Type           *string            `json:"type"`
-	Disabled       *bool              `json:"disabled"`
-	Username       *string            `json:"username"`
-	Name           *string            `json:"name"`
-	ProfilePicture UserProfilePicture `json:"profile_picture"`
-	Reputation     *uint64            `json:"reputation,omitempty"`
-	Signal         *float64           `json:"signal,omitempty"`
-	Impact         *float64           `json:"impact,omitempty"`
-	CreatedAt      *Timestamp         `json:"created_at"`
+	ID                    *string            `json:"id"`
+	Type                  *string            `json:"type"`
+	Disabled              *bool              `json:"disabled"`
+	Username              *string            `json:"username"`
+	Name                  *string            `json:"name"`
+	ProfilePicture        UserProfilePicture `json:"profile_picture"`
+	Bio                   *string            `json:"bio,omitempty"`
+	Website               *string            `json:"website,omitempty"`
+	Location              *string            `json:"location,omitempty"`
+	Reputation            *uint64            `json:"reputation,omitempty"`
+	Signal                *float64           `json:"signal,omitempty"`
+	Impact                *float64           `json:"impact,omitempty"`
+	HackeroneTriager      *bool              `json:"hackerone_triager,omitempty"`
+	CreatedAt             *Timestamp         `json:"created_at"`
+	ParticipatingPrograms []Program          `json:"participating_programs,omitempty"`
 }
 
 // Helper types for JSONUnmarshal
 type user User // Used to avoid recursion of JSONUnmarshal
 type userUnmarshalHelper struct {
 	user
-	Attributes *user `json:"attributes"`
+	Attributes    *user `json:"attributes"`
+	Relationships struct {
+		ParticipatingPrograms struct {
+			Data []Program `json:"data"`
+		} `json:"participating_programs"`
+	}
 }
 
 // UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
@@ -63,5 +73,6 @@ func (u *User) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	*u = User(helper.user)
+	u.ParticipatingPrograms = helper.Relationships.ParticipatingPrograms.Data
 	return nil
 }

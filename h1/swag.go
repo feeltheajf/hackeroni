@@ -26,7 +26,7 @@ import (
 
 // Swag represents swag that has/hasn't been sent to an address.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#swag
+// HackerOne API docs: https://api.hackerone.com/reference/#swag
 type Swag struct {
 	ID        *string    `json:"id"`
 	Type      *string    `json:"type"`

@@ -20,39 +20,12 @@
 
 package h1
 
-import (
-	"encoding/json"
-)
-
-// Attachment represents an attachment (typically to a report or comment).
+// StateChange represents a request body for changing report state
 //
-// HackerOne API docs: https://api.hackerone.com/reference/#attachment
-type Attachment struct {
-	ID          *string    `json:"id"`
-	Type        *string    `json:"type"`
-	FileName    *string    `json:"file_name"`
-	ContentType *string    `json:"content_type"`
-	FileSize    *int       `json:"file_size"`
-	ExpiringURL *string    `json:"expiring_url"`
-	CreatedAt   *Timestamp `json:"created_at"`
-}
-
-// Helper types for JSONUnmarshal
-type attachment Attachment // Used to avoid recursion of JSONUnmarshal
-type attachmentUnmarshalHelper struct {
-	*attachment
-	Attributes *attachment `json:"attributes"`
-}
-
-// UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
-func (a *Attachment) UnmarshalJSON(b []byte) error {
-	result := attachment{}
-	var helper attachmentUnmarshalHelper
-	helper.attachment = &result
-	helper.Attributes = &result
-	if err := json.Unmarshal(b, &helper); err != nil {
-		return err
-	}
-	*a = Attachment(result)
-	return nil
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-change-state
+type StateChange struct {
+	Type             string  `jsonapi:"primary,state-change"`
+	Message          string  `jsonapi:"attr,message"`
+	State            string  `jsonapi:"attr,state"`
+	OriginalReportID *string `jsonapi:"attr,original_report_id,omitempty"` // only used when closing report as duplicate
 }

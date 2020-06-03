@@ -26,7 +26,7 @@ import (
 
 // GroupPermission represent possible permissions sizes for a group
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#group
+// HackerOne API docs: https://api.hackerone.com/reference/#group
 const (
 	GroupPermissionRewardManagement  string = "reward_management"
 	GroupPermissionProgramManagement string = "program_management"
@@ -36,7 +36,7 @@ const (
 
 // Group represents a group of users.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#group
+// HackerOne API docs: https://api.hackerone.com/reference/#group
 type Group struct {
 	ID          *string    `json:"id"`
 	Type        *string    `json:"type"`

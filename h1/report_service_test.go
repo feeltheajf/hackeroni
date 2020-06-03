@@ -143,7 +143,7 @@ func Test_ReportService_List(t *testing.T) {
 
 // List returns all Reports matching the specified criteria
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#reports/query
+// HackerOne API docs: https://api.hackerone.com/reference/#reports/query
 func (s *ReportService) List(filterOpts ReportListOptions, listOpts *ListOptions) ([]Report, *Response, error) {
 	opts := reportListRequest{
 		ListOptions: listOpts,

@@ -21,38 +21,21 @@
 package h1
 
 import (
-	"encoding/json"
+	"github.com/stretchr/testify/assert"
+
+	"testing"
 )
 
-// Attachment represents an attachment (typically to a report or comment).
-//
-// HackerOne API docs: https://api.hackerone.com/reference/#attachment
-type Attachment struct {
-	ID          *string    `json:"id"`
-	Type        *string    `json:"type"`
-	FileName    *string    `json:"file_name"`
-	ContentType *string    `json:"content_type"`
-	FileSize    *int       `json:"file_size"`
-	ExpiringURL *string    `json:"expiring_url"`
-	CreatedAt   *Timestamp `json:"created_at"`
-}
-
-// Helper types for JSONUnmarshal
-type attachment Attachment // Used to avoid recursion of JSONUnmarshal
-type attachmentUnmarshalHelper struct {
-	*attachment
-	Attributes *attachment `json:"attributes"`
-}
-
-// UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
-func (a *Attachment) UnmarshalJSON(b []byte) error {
-	result := attachment{}
-	var helper attachmentUnmarshalHelper
-	helper.attachment = &result
-	helper.Attributes = &result
-	if err := json.Unmarshal(b, &helper); err != nil {
-		return err
+// TODO
+func Test_StateChange(t *testing.T) {
+	var actual StateChange
+	loadResource(t, &actual, "tests/resources/vulnerability-type.json")
+	expected := VulnerabilityType{
+		ID:          String("1337"),
+		Type:        String(VulnerabilityTypeType),
+		Name:        String("Cross-Site Scripting (XSS)"),
+		Description: String("Failure of a site to validate, filter, or encode user input before returning it to another user's web client."),
+		CreatedAt:   NewTimestamp("2016-02-02T04:05:06.000Z"),
 	}
-	*a = Attachment(result)
-	return nil
+	assert.Equal(t, expected, actual)
 }

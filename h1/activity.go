@@ -26,7 +26,7 @@ import (
 
 // Activity represents activities that have occured in a given report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity
+// HackerOne API docs: https://api.hackerone.com/reference/#activity
 type Activity struct {
 	report      *Report
 	ID          *string         `json:"id"`
@@ -134,7 +134,7 @@ func (a *Activity) Report() *Report {
 
 // ActivityBountyAwarded occurs when a bounty is awarded.
 //
-// HackerOne API docs:https://api.hackerone.com/docs/v1#activity-bounty-awarded
+// HackerOne API docs:https://api.hackerone.com/reference/#activity-activity-bounty-awarded
 type ActivityBountyAwarded struct {
 	BountyAmount *string `json:"bounty_amount"`
 	BonusAmount  *string `json:"bonus_amount"`
@@ -158,7 +158,7 @@ func (a *ActivityBountyAwarded) UnmarshalJSON(b []byte) error {
 
 // ActivityBountySuggested occurs when a bounty is suggested.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-bounty-suggested
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-bounty-suggested
 type ActivityBountySuggested struct {
 	BountyAmount *string `json:"bounty_amount"`
 	BonusAmount  *string `json:"bonus_amount"`
@@ -182,7 +182,7 @@ func (a *ActivityBountySuggested) UnmarshalJSON(b []byte) error {
 
 // ActivityBugCloned occurs when a bug is cloned.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-bug-cloned
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-bug-cloned
 type ActivityBugCloned struct {
 	OriginalReportID *int `json:"original_report_id"`
 }
@@ -205,7 +205,7 @@ func (a *ActivityBugCloned) UnmarshalJSON(b []byte) error {
 
 // ActivityExternalUserInvitationCancelled occurs when a external user's invitiation is cancelled.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-external-user-invitation-cancelled
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-external-user-invitation-cancelled
 type ActivityExternalUserInvitationCancelled struct {
 	Email *string `json:"email"`
 }
@@ -228,7 +228,7 @@ func (a *ActivityExternalUserInvitationCancelled) UnmarshalJSON(b []byte) error 
 
 // ActivityExternalUserInvited occurs when a external user is invited.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-external-user-invited
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-external-user-invited
 type ActivityExternalUserInvited struct {
 	Email *string `json:"email"`
 }
@@ -251,7 +251,7 @@ func (a *ActivityExternalUserInvited) UnmarshalJSON(b []byte) error {
 
 // ActivityExternalUserJoined occurs when a external user joins.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-external-user-joined
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-external-user-joined
 type ActivityExternalUserJoined struct {
 	DuplicateReportID *int `json:"duplicate_report_id"`
 }
@@ -274,7 +274,7 @@ func (a *ActivityExternalUserJoined) UnmarshalJSON(b []byte) error {
 
 // ActivityExternalUserRemoved occurs when a external user is removed
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-external-user-removed
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-external-user-removed
 type ActivityExternalUserRemoved struct {
 	RemovedUser *User `json:"removed_user"`
 }
@@ -301,7 +301,7 @@ func (a *ActivityExternalUserRemoved) UnmarshalJSON(b []byte) error {
 
 // ActivityGroupAssignedToBug occurs when a group is assigned to a report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-group-assigned-to-bug
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-group-assigned-to-bug
 type ActivityGroupAssignedToBug struct {
 	Group *Group `json:"group"`
 }
@@ -328,7 +328,7 @@ func (a *ActivityGroupAssignedToBug) UnmarshalJSON(b []byte) error {
 
 // ActivityReferenceIDAdded occurs when a reference id/url is added to a report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-reference-id-added
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-reference-id-added
 type ActivityReferenceIDAdded struct {
 	Reference    *string `json:"reference"`
 	ReferenceURL *string `json:"reference_url"`
@@ -352,7 +352,7 @@ func (a *ActivityReferenceIDAdded) UnmarshalJSON(b []byte) error {
 
 // ActivityReportTitleUpdated occurs when report title is updated
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-report-title-updated
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-report-title-updated
 type ActivityReportTitleUpdated struct {
 	OldTitle *string `json:"old_title"`
 	NewTitle *string `json:"new_title"`
@@ -376,10 +376,10 @@ func (a *ActivityReportTitleUpdated) UnmarshalJSON(b []byte) error {
 
 // ActivityReportVulnerabilityTypesUpdated occurs when vulnerability types for a report are updated.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-report-vulnerability-types-updated
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-report-vulnerability-types-updated
 type ActivityReportVulnerabilityTypesUpdated struct {
-	OldVulnerabilityTypes []VulnerabilityType `json:"old_vulnerability_types"`
-	NewVulnerabilityTypes []VulnerabilityType `json:"new_vulnerability_types"`
+	OldVulnerabilityTypes []Weakness `json:"old_weakness"`
+	NewVulnerabilityTypes []Weakness `json:"new_weakness"`
 }
 
 // Helper types for JSONUnmarshal
@@ -387,11 +387,11 @@ type activityReportVulnerabilityTypesUpdated ActivityReportVulnerabilityTypesUpd
 type activityReportVulnerabilityTypesUpdatedUnmarshalHelper struct {
 	Relationships struct {
 		OldVulnerabilityTypes struct {
-			Data []VulnerabilityType `json:"data"`
-		} `json:"old_vulnerability_types"`
+			Data []Weakness `json:"data"`
+		} `json:"old_weakness"`
 		NewVulnerabilityTypes struct {
-			Data []VulnerabilityType `json:"data"`
-		} `json:"new_vulnerability_types"`
+			Data []Weakness `json:"data"`
+		} `json:"new_weakness"`
 	} `json:"relationships"`
 }
 
@@ -408,7 +408,7 @@ func (a *ActivityReportVulnerabilityTypesUpdated) UnmarshalJSON(b []byte) error 
 
 // ActivitySwagAwarded occurs when swag is awarded
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-swag-awarded
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-swag-awarded
 type ActivitySwagAwarded struct {
 	Swag *Swag `json:"swag"`
 }
@@ -435,7 +435,7 @@ func (a *ActivitySwagAwarded) UnmarshalJSON(b []byte) error {
 
 // ActivityUserAssignedToBug occurs when a user is assigned to a report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-user-assigned-to-bug
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-user-assigned-to-bug
 type ActivityUserAssignedToBug struct {
 	AssignedUser *User `json:"assigned_user"`
 }
@@ -462,7 +462,7 @@ func (a *ActivityUserAssignedToBug) UnmarshalJSON(b []byte) error {
 
 // ActivityUserBannedFromProgram occurs when a user is banned from a program.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#activity-user-banned-from-program
+// HackerOne API docs: https://api.hackerone.com/reference/#activity-activity-user-banned-from-program
 type ActivityUserBannedFromProgram struct {
 	RemovedUser *User `json:"removed_user"`
 }

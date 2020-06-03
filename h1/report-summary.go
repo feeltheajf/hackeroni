@@ -26,7 +26,7 @@ import (
 
 // ReportSummaryCategory represent possible categorys for a report summary
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#report-summary
+// HackerOne API docs: https://api.hackerone.com/reference/#report-summary
 const (
 	ReportSummaryCategoryResearcher string = "researcher"
 	ReportSummaryCategoryTeam       string = "team"
@@ -34,7 +34,7 @@ const (
 
 // ReportSummary represents a summary of a report.
 //
-// HackerOne API docs: https://api.hackerone.com/docs/v1#report-summary
+// HackerOne API docs: https://api.hackerone.com/reference/#report-summary
 type ReportSummary struct {
 	ID        *string    `json:"id"`
 	Type      *string    `json:"type"`
