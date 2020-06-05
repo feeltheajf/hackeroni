@@ -22,6 +22,7 @@ package h1
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // ReportState represent possible states for a report
@@ -159,6 +160,11 @@ func (r *Report) Assignee() (assignee interface{}) {
 		panic(err.Error())
 	}
 	return assignee
+}
+
+// URL returns report HTML URL
+func (r *Report) URL() string {
+	return fmt.Sprintf("https://hackerone.com/reports/%s", *r.ID)
 }
 
 // Helper function for Participants

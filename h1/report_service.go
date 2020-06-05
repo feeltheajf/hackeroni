@@ -91,11 +91,6 @@ func (s *ReportService) CreateComment(ID, message string, internal bool) (*Activ
 	return rResp, resp, err
 }
 
-// URL returns report HTML URL
-func (s *ReportService) URL(ID string) string {
-	return fmt.Sprintf("https://hackerone.com/reports/%s", ID)
-}
-
 // ReportListFilter specifies optional parameters to the ReportService.List method.
 //
 // HackerOne API docs: https://api.hackerone.com/reference/#reports/query
