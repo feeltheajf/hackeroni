@@ -93,7 +93,7 @@ func (s *ReportService) CreateComment(ID, message string, internal bool) (*Activ
 
 // URL returns report HTML URL
 func (s *ReportService) URL(ID string) string {
-	return fmt.Sprintf("%s/reports/%s", s.client.BaseURL, ID)
+	return fmt.Sprintf("https://hackerone.com/reports/%s", ID)
 }
 
 // ReportListFilter specifies optional parameters to the ReportService.List method.
