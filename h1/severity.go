@@ -32,6 +32,7 @@ const (
 	SeverityRatingLow               string = "low"
 	SeverityRatingMedium            string = "medium"
 	SeverityRatingHigh              string = "high"
+	SeverityRatingCritical          string = "critical"
 	SeverityAuthorTypeUser          string = "User"
 	SeverityAuthorTypeTeam          string = "Team"
 	SeverityAttackVectorNetwork     string = "network"
