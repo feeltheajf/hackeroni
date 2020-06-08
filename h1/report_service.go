@@ -91,6 +91,29 @@ func (s *ReportService) CreateComment(ID, message string, internal bool) (*Activ
 	return rResp, resp, err
 }
 
+// UpdateReferenceID updates reference ID field of the report.
+//
+// HackerOne API docs: https://api.hackerone.com/core-resources/#reports-update-reference
+func (s *ReportService) UpdateReferenceID(ID, message, reference string) (*Report, *Response, error) {
+	body := &UpdateReference{
+		Message:   message,
+		Reference: reference,
+	}
+
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("reports/%s/issue_tracker_reference_id", ID), body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rResp := new(Report)
+	resp, err := s.client.Do(req, rResp)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return rResp, resp, err
+}
+
 // ReportListFilter specifies optional parameters to the ReportService.List method.
 //
 // HackerOne API docs: https://api.hackerone.com/reference/#reports/query
