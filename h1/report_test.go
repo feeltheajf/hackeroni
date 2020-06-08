@@ -30,12 +30,12 @@ func Test_Report(t *testing.T) {
 	var actual Report
 	loadResource(t, &actual, "tests/resources/report.json")
 	expected := Report{
-		ID:    String("1337"),
-		Type:  String(ReportType),
-		Title: String("XSS in login form"),
+		ID:                       String("1337"),
+		Type:                     String(ReportType),
+		Title:                    String("XSS in login form"),
 		VulnerabilityInformation: String("..."),
-		State:     String("new"),
-		CreatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
+		State:                    String("new"),
+		CreatedAt:                NewTimestamp("2016-02-02T04:05:06.000Z"),
 		Program: &Program{
 			ID:        String("1337"),
 			Type:      String(ProgramType),
@@ -43,14 +43,12 @@ func Test_Report(t *testing.T) {
 			CreatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
 			UpdatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
 		},
-		VulnerabilityTypes: []VulnerabilityType{
-			VulnerabilityType{
-				ID:          String("1337"),
-				Type:        String(VulnerabilityTypeType),
-				Name:        String("Cross-Site Scripting (XSS)"),
-				Description: String("Failure of a site to validate, filter, or encode user input before returning it to another user's web client."),
-				CreatedAt:   NewTimestamp("2016-02-02T04:05:06.000Z"),
-			},
+		Weakness: &Weakness{
+			ID:          String("1337"),
+			Type:        String(VulnerabilityTypeType),
+			Name:        String("Cross-Site Scripting (XSS)"),
+			Description: String("Failure of a site to validate, filter, or encode user input before returning it to another user's web client."),
+			CreatedAt:   NewTimestamp("2016-02-02T04:05:06.000Z"),
 		},
 		Reporter: &User{
 			ID:       String("1337"),

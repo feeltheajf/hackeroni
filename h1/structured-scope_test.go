@@ -27,15 +27,31 @@ import (
 )
 
 // TODO
-func Test_Weakness(t *testing.T) {
-	var actual StateChange
-	loadResource(t, &actual, "tests/resources/vulnerability-type.json")
-	expected := Weakness{
-		ID:          String("1337"),
-		Type:        String(VulnerabilityTypeType),
-		Name:        String("Cross-Site Scripting (XSS)"),
-		Description: String("Failure of a site to validate, filter, or encode user input before returning it to another user's web client."),
-		CreatedAt:   NewTimestamp("2016-02-02T04:05:06.000Z"),
+
+func Test_StructuredScope(t *testing.T) {
+	var actual ReportSummary
+	loadResource(t, &actual, "tests/resources/report-summary.json")
+	expected := ReportSummary{
+		ID:        String("1337"),
+		Type:      String(ReportSummaryType),
+		Content:   String("There was a cross-site scripting vulnerability in our login form."),
+		Category:  String("team"),
+		CreatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
+		UpdatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
+		User: &User{
+			ID:       String("1337"),
+			Type:     String(UserType),
+			Disabled: Bool(false),
+			Username: String("api-example"),
+			Name:     String("API Example"),
+			ProfilePicture: UserProfilePicture{
+				Size62x62:   String("/assets/avatars/default.png"),
+				Size82x82:   String("/assets/avatars/default.png"),
+				Size110x110: String("/assets/avatars/default.png"),
+				Size260x260: String("/assets/avatars/default.png"),
+			},
+			CreatedAt: NewTimestamp("2016-02-02T04:05:06.000Z"),
+		},
 	}
 	assert.Equal(t, expected, actual)
 }
