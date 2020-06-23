@@ -114,6 +114,9 @@ type reportUnmarshalHelper struct {
 		Summaries struct {
 			Data []ReportSummary `json:"data"`
 		} `json:"summaries"`
+		StructuredScope struct {
+			Data *StructuredScope `json:"data"`
+		} `json:"structured_scope"`
 	} `json:"relationships"`
 }
 
@@ -138,6 +141,7 @@ func (r *Report) UnmarshalJSON(b []byte) error {
 	}
 	r.Bounties = helper.Relationships.Bounties.Data
 	r.Summaries = helper.Relationships.Summaries.Data
+	r.StructuredScope = helper.Relationships.StructuredScope.Data
 	return nil
 }
 

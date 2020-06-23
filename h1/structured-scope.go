@@ -48,12 +48,7 @@ type StructuredScope struct {
 type structuredScope StructuredScope // Used to avoid recursion of JSONUnmarshal
 type structuredScopeUnmarshalHelper struct {
 	structuredScope
-	Attributes    *structuredScope `json:"attributes"`
-	Relationships struct {
-		User struct {
-			Data *User `json:"data"`
-		} `json:"user"`
-	} `json:"relationships"`
+	Attributes *structuredScope `json:"attributes"`
 }
 
 // UnmarshalJSON allows JSONAPI attributes and relationships to unmarshal cleanly.
