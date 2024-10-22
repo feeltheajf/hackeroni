@@ -59,9 +59,13 @@ func (s *ProgramService) Get(ID string) (*Program, *Response, error) {
 	return data, resp, err
 }
 
-// Me fetches a list of programs available to the client
-func (s *ProgramService) ListStructuredScopes(programID string) ([]StructuredScope, *Response, error) {
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("programs/%s/structured_scopes", programID), nil)
+// ListStructuredScopes fetches a list of structured scopes for the given program
+func (s *ProgramService) ListStructuredScopes(programID string, listOpts *ListOptions) ([]StructuredScope, *Response, error) {
+	opts := struct{}{}
+	// addOptions takes structs only so it can't fail
+	u, _ := addOptions(fmt.Sprintf("programs/%s/structured_scopes", programID), &opts, listOpts)
+
+	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -73,4 +77,22 @@ func (s *ProgramService) ListStructuredScopes(programID string) ([]StructuredSco
 	}
 
 	return *data, resp, err
+}
+
+// ListAllStructuredScopes fetches a list of all structured scopes for the given program
+func (s *ProgramService) ListAllStructuredScopes(programID string) ([]StructuredScope, *Response, error) {
+	listOpts := &ListOptions{PageSize: defaultPageSize}
+	data := []StructuredScope{}
+	for {
+		items, resp, err := s.ListStructuredScopes(programID, listOpts)
+		if err != nil {
+			return nil, resp, err
+		}
+		data = append(data, items...)
+		if resp.Links.Next == "" {
+			break
+		}
+		listOpts.Page = resp.Links.NextPageNumber()
+	}
+	return data, nil, nil
 }

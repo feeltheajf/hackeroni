@@ -31,8 +31,12 @@ import (
 // CredentialService handles communication with the credential related methods of the H1 API.
 type CredentialService service
 
-func (s *CredentialService) ListCredentialInquiries(programID string) ([]CredentialInquiry, *Response, error) {
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("programs/%s/credential_inquiries", programID), nil)
+func (s *CredentialService) ListCredentialInquiries(programID string, listOpts *ListOptions) ([]CredentialInquiry, *Response, error) {
+	opts := struct{}{}
+	// addOptions takes structs only so it can't fail
+	u, _ := addOptions(fmt.Sprintf("programs/%s/credential_inquiries", programID), &opts, listOpts)
+
+	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -46,8 +50,29 @@ func (s *CredentialService) ListCredentialInquiries(programID string) ([]Credent
 	return *inquiries, resp, err
 }
 
-func (s *CredentialService) ListCredentialInquiryResponses(programID, inquiryID string) ([]CredentialInquiryResponse, *Response, error) {
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("programs/%s/credential_inquiries/%s/credential_inquiry_responses", programID, inquiryID), nil)
+func (s *CredentialService) ListAllCredentialInquiries(programID string) ([]CredentialInquiry, *Response, error) {
+	listOpts := &ListOptions{PageSize: defaultPageSize}
+	data := []CredentialInquiry{}
+	for {
+		items, resp, err := s.ListCredentialInquiries(programID, listOpts)
+		if err != nil {
+			return nil, resp, err
+		}
+		data = append(data, items...)
+		if resp.Links.Next == "" {
+			break
+		}
+		listOpts.Page = resp.Links.NextPageNumber()
+	}
+	return data, nil, nil
+}
+
+func (s *CredentialService) ListCredentialInquiryResponses(programID, inquiryID string, listOpts *ListOptions) ([]CredentialInquiryResponse, *Response, error) {
+	opts := struct{}{}
+	// addOptions takes structs only so it can't fail
+	u, _ := addOptions(fmt.Sprintf("programs/%s/credential_inquiries/%s/credential_inquiry_responses", programID, inquiryID), &opts, listOpts)
+
+	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -59,6 +84,23 @@ func (s *CredentialService) ListCredentialInquiryResponses(programID, inquiryID 
 	}
 
 	return *responses, resp, err
+}
+
+func (s *CredentialService) ListAllCredentialInquiryResponses(programID, inquiryID string) ([]CredentialInquiryResponse, *Response, error) {
+	listOpts := &ListOptions{PageSize: defaultPageSize}
+	data := []CredentialInquiryResponse{}
+	for {
+		items, resp, err := s.ListCredentialInquiryResponses(programID, inquiryID, listOpts)
+		if err != nil {
+			return nil, resp, err
+		}
+		data = append(data, items...)
+		if resp.Links.Next == "" {
+			break
+		}
+		listOpts.Page = resp.Links.NextPageNumber()
+	}
+	return data, nil, nil
 }
 
 // CreateCredential creates a new credential for specified StructuredScope
