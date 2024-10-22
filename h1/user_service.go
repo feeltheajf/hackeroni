@@ -24,53 +24,21 @@ import (
 	"fmt"
 )
 
-// ProgramService handles communication with the program related methods of the H1 API.
-type ProgramService service
+// UserService handles communication with the user related methods of the H1 API.
+type UserService service
 
-// Me fetches a list of programs available to the client
-func (s *ProgramService) Me() ([]Program, *Response, error) {
-	req, err := s.client.NewRequest("GET", "me/programs", nil)
+// GetByUsername fetches a user by their username
+func (s *UserService) GetByUsername(username string) (*User, *Response, error) {
+	req, err := s.client.NewRequest("GET", fmt.Sprintf("users/%s", username), nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	data := new([]Program)
-	resp, err := s.client.Do(req, data)
+	user := new(User)
+	resp, err := s.client.Do(req, user)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return *data, resp, err
-}
-
-// Get fetches a Program by ID
-func (s *ProgramService) Get(ID string) (*Program, *Response, error) {
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("programs/%s", ID), nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	data := new(Program)
-	resp, err := s.client.Do(req, data)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return data, resp, err
-}
-
-// Me fetches a list of programs available to the client
-func (s *ProgramService) ListStructuredScopes(programID string) ([]StructuredScope, *Response, error) {
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("programs/%s/structured_scopes", programID), nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	data := new([]StructuredScope)
-	resp, err := s.client.Do(req, data)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return *data, resp, err
+	return user, resp, err
 }
