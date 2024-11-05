@@ -20,7 +20,7 @@
 
 package h1
 
-// Bounty represents a bounty awarded.
+// CreateCredential represents a new credential.
 //
 // HackerOne API docs:  https://api.hackerone.com/customer-resources/#credentials-create-a-credential
 type CreateCredential struct {

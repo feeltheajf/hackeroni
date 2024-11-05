@@ -24,7 +24,7 @@ import (
 	"encoding/json"
 )
 
-// Bounty represents a bounty awarded.
+// CredentialInquiryResponse represents credential inquiry response.
 //
 // HackerOne API docs:  https://api.hackerone.com/customer-reference/#credential_inquiry_response
 type CredentialInquiryResponse struct {
